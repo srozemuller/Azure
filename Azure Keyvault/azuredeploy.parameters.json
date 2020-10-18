@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "value": "tst-kv-tst1"
+        },
+        "objectId": {
+            "value": "d1a2aa35-4e4b-4b94-a9f0-137027085535"
+        },
+        "keysPermissions": {
+            "value": [
+                "list",
+                "read"
+            ]
+        },
+        "secretsPermissions": {
+            "value": [
+                "list",
+                "read"
+            ]
+        }
+    }
+}
