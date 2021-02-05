@@ -1,3 +1,5 @@
+# This script is a part of a blogpost which can be found at: 
+
 Param(
     [Parameter(Mandatory = $True)]
     [string]$personalToken,
@@ -9,10 +11,19 @@ Param(
     [string]$ProjectName,
 
     [Parameter(Mandatory = $True)]
-    [string]$managementGroupId,
+    [string]$ManagementGroupId,
 
     [Parameter(Mandatory = $True)]
-    [string]$managementGroupName
+    [string]$ManagementGroupName,
+ 
+    [Parameter(Mandatory = $True)]
+    [string]$TenantId,
+    
+    [Parameter(Mandatory = $True)]
+    [string]$ApplicationId,
+    
+    [Parameter(Mandatory = $True)]
+    [string]$ApplicationSecret
     
 )
 
@@ -47,10 +58,10 @@ $Body = @{
     url                              = "https://management.azure.com/"
     authorization                    = @{
         parameters = @{
-            tenantid            = $TenantInfo.Tenant.Id
-            serviceprincipalid  = $AADApplication.ApplicationId.Guid
+            tenantid            = $TenantId
+            serviceprincipalid  = $ApplicationId
             authenticationType  = "spnKey"
-            serviceprincipalkey = $PlainPassword
+            serviceprincipalkey = $ApplicationSecret
         
         }
         scheme     = "ServicePrincipal"
@@ -67,6 +78,7 @@ $Body = @{
         }
     )
 }
+
 $URL = "https://dev.azure.com/$organisation/$ProjectName/_apis/serviceendpoint/endpoints?api-version=6.0-preview.4"
 $Parameters = @{
     Uri         = $URL
