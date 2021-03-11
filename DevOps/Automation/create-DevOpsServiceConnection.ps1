@@ -10,12 +10,18 @@ Param(
     [Parameter(Mandatory = $True)]
     [string]$ProjectName,
 
-    [Parameter(Mandatory = $True)]
+    [Parameter(Mandatory = $True, ParameterSetName = 'ManagementGroup')]
     [string]$ManagementGroupId,
 
-    [Parameter(Mandatory = $True)]
+    [Parameter(Mandatory = $True, ParameterSetName = 'ManagementGroup')]
     [string]$ManagementGroupName,
  
+    [Parameter(Mandatory = $True, ParameterSetName = 'Subscription')]
+    [string]$SubscriptionId,
+
+    [Parameter(Mandatory = $True, ParameterSetName = 'Subscription')]
+    [string]$SubscriptionName,
+
     [Parameter(Mandatory = $True)]
     [string]$TenantId,
     
@@ -32,27 +38,40 @@ $AzureDevOpsAuthenicationHeader = @{Authorization = 'Basic ' + [Convert]::ToBase
 ## Get ProjectId
 $URL = "https://dev.azure.com/$($organisation)/_apis/projects?api-version=6.0"
 Try {
-    $AzDoProjectNameproperties = (Invoke-RestMethod $URL -Headers $AzureDevOpsAuthenicationHeader -ErrorAction Stop).Value
+    $ProjectNameproperties = (Invoke-RestMethod $URL -Headers $AzureDevOpsAuthenicationHeader -ErrorAction Stop).Value
     Write-Verbose "Collected Azure DevOps Projects"
 }
 Catch {
     $ErrorMessage = $_ | ConvertFrom-Json
     Throw "Could not collect project: $($ErrorMessage.message)"
 }
-$ProjectID = ($AzDoProjectNameproperties | Where-Object { $_.Name -eq $ProjectName }).id
-Write-Verbose "Collected ID: $AzDoProjectID"
+$ProjectID = ($ProjectNameproperties | Where-Object { $_.Name -eq $ProjectName }).id
+Write-Verbose "Collected ID: $ProjectID"
+$ConnectionName = "Connection To $ProjectName"
 
-
-$ConnectionName = "MWP Connection To $ProjectName"
+switch ($PsCmdlet.ParameterSetName) {
+    ManagementGroup { 
+        $data = @{
+            managementGroupId   = "$managementGroupId"
+            managementGroupName = "$managementGroupName"
+            environment         = "AzureCloud"
+            scopeLevel          = "ManagementGroup"
+            creationMode        = "Manual"
+        }
+    }
+    Subscription { 
+        $data = @{
+            SubscriptionId   = $SubscriptionId
+            SubscriptionName = $SubscriptionName
+            environment      = "AzureCloud"
+            scopeLevel       = "Subscription"
+            creationMode     = "Manual"
+        }
+    }
+}
 # Create body for the API call
 $Body = @{
-    data                             = @{
-        managementGroupId   = $managementGroupId
-        managementGroupName = $managementGroupName
-        environment         = "AzureCloud"
-        scopeLevel          = "ManagementGroup"
-        creationMode        = "Manual"
-    }
+    data                             = $data
     name                             = $ConnectionName
     type                             = "AzureRM"
     url                              = "https://management.azure.com/"
