@@ -1,11 +1,38 @@
-# This script is a part of a blogpost which can be found at: 
+<#
+.SYNOPSIS
+Creates a DevOps service connection through REST API
+.DESCRIPTION
+The scrip will help you creating an Azure DevOps service connection through the REST API. 
+.PARAMETER PersonalToken
+Personal Access Token. Check https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page
+.PARAMETER Organisation
+The Azure DevOps organisation name
+.PARAMETER ProjectName
+The Azure DevOps project where the service connection will be made
+.PARAMETER ManagementGroupId
+The management group id created in the tenant
+.PARAMETER ManagementGroupName
+The management group name created in the tenant
+.PARAMETER SubscriptionId
+The subscription id in the tenant where to connect
+.PARAMETER SubscriptionName
+The subscription name in the tenant where to connect
+.PARAMETER TenantId
+The tenant id where to connect
+.PARAMETER ApplicationId
+The application id (service principal) in the Azure AD 
+.PARAMETER ApplicationSecret
+The application secret, in plain text
+.EXAMPLE
+create-DevOpsServiceConnection.ps1 -personalToken xxx -organisation DevOpsOrganisation -ProjectName WVD -ManagementGroupId MGTGROUP1 -ManagementGroupName 'MGT GROUP 1' -TenantId xxx-xxx -ApplicationId xxx-xxx-xxx -ApplicationSecret 'verysecret'
+#>
 
 Param(
     [Parameter(Mandatory = $True)]
-    [string]$personalToken,
+    [string]$PersonalToken,
     
     [Parameter(Mandatory = $True)]
-    [string]$organisation,
+    [string]$Organisation,
     
     [Parameter(Mandatory = $True)]
     [string]$ProjectName,
