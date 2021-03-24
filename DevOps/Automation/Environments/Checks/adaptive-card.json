@@ -84,7 +84,8 @@
                 "actions": [
                     {
                         "type": "Action.Submit",
-                        "title": "OK"
+                        "title": "OK",
+                        "id": 202
                     }
                 ],
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
