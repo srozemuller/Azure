@@ -1,0 +1,98 @@
+{
+    "type": "AdaptiveCard",
+    "body": [
+        {
+            "type": "TextBlock",
+            "size": "Medium",
+            "weight": "Bolder",
+            "text": "@{triggerBody()?['text']?['Title']}"
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "items": [
+                        {
+                            "type": "Image",
+                            "url": "https://pbs.twimg.com/profile_images/1145617831905681408/XNKktHjN_400x400.png",
+                            "size": "Small",
+                            "style": "Person"
+                        }
+                    ],
+                    "width": "auto"
+                },
+                {
+                    "type": "Column",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "weight": "Bolder",
+                            "text": "@{triggerBody()?['account']?['name']}",
+                            "wrap": true
+                        }
+                    ],
+                    "width": "stretch"
+                }
+            ]
+        },
+        {
+            "type": "TextBlock",
+            "text": "@{triggerBody()?['text']?['Message']}",
+            "wrap": true
+        },
+        {
+            "type": "FactSet",
+            "facts": [
+                {
+                    "title": "VirtualMachineName",
+                    "value": "@{triggerBody()?['text']?['VmName']}"
+                },
+                {
+                    "title": "VMadminUsername",
+                    "value": "@{triggerBody()?['text']?['VmUserName']}"
+                },
+                {
+                    "title": "VMadminPassword",
+                    "value": "@{triggerBody()?['text']?['VmPassword']}"
+                },
+                {
+                    "title": "PublicIp",
+                    "value": "@{triggerBody()?['text']?['VmPublicIp']}"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.ShowCard",
+            "title": "Ok, resume pipeline",
+            "card": {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "Input.Date",
+                        "id": "dueDate"
+                    },
+                    {
+                        "type": "Input.Text",
+                        "id": "comment",
+                        "placeholder": "Add a comment",
+                        "isMultiline": true
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.Submit",
+                        "title": "OK"
+                    }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+            },
+            "id": "resume",
+            "style": "positive"
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.2"
+}
